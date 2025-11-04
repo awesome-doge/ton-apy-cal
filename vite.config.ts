@@ -4,7 +4,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // https://vite.dev/config/
 export default defineConfig({
-    base: '/apy-cal/',
+    base: '/ton-apy-cal/',
     plugins: [
         nodePolyfills({
             // Whether to polyfill `node:` protocol imports.
