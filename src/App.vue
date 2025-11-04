@@ -25,12 +25,32 @@ const stakingServices = ref([
   { id: 'stakee', name: 'Stakee', data: stakeeData }
 ])
 
+// Helper function to add delay between API calls
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 onMounted(async () => {
   try {
     loading.value = true;
+
+    console.log('Loading all protocols with rate limit protection...');
+    console.log('For faster loading, get FREE API key from https://toncenter.com/');
+
+    // Load protocols with delays to avoid rate limits (1.5 seconds between calls)
+    // With API key, you can remove the delays for instant loading
+
+    console.log('Loading KTON...');
     ktonData.value = await getKTONPool();
+    await delay(1500); // 1.5 second delay
+
+    console.log('Loading TonStakers...');
     tonStakersData.value = await getTonStakersPool();
+    await delay(1500); // 1.5 second delay
+
+    console.log('Loading Stakee...');
     stakeeData.value = await getStakeePool();
+    await delay(1500); // 1.5 second delay
+
+    console.log('Loading Hipo...');
     hipoData.value = await getHipoTreasury().then(res => {
       console.log(res.parent.toString())
       const newData = {
@@ -46,11 +66,15 @@ onMounted(async () => {
         interestRate: '-'
       }
       return newData
-    }
-    );
+    });
+
+    console.log('✅ All protocols loaded successfully!');
+
+    // Bemo is optional - uncomment if needed
+    // await delay(1500);
     // bemoData.value = await getBemoFinancial();
     // const nominatorProxy = await getBemoNominatorProxy();
-    //console.log('nominatorProxy:', nominatorProxy)
+
   } catch (error) {
     console.error('Error loading data:', error);
   } finally {

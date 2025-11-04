@@ -466,7 +466,11 @@ const getNextRoundSince = (data: any) => {
           </tr>
         </thead>
         <tbody>
-          <!-- Pool Status -->
+          <!-- ==================== PROTOCOL STATUS ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">🟢 Protocol Status</td>
+          </tr>
+
           <tr>
             <td class="metric-name">Pool Status</td>
             <td v-for="service in services" :key="service.id">
@@ -476,7 +480,6 @@ const getNextRoundSince = (data: any) => {
             </td>
           </tr>
 
-          <!-- Deposits Status -->
           <tr>
             <td class="metric-name">Deposits Status</td>
             <td v-for="service in services" :key="service.id">
@@ -484,6 +487,11 @@ const getNextRoundSince = (data: any) => {
                 {{ getDepositsStatus(service.data).text }}
               </span>
             </td>
+          </tr>
+
+          <!-- ==================== FEES & RATES ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">💰 Fees & Interest Rates</td>
           </tr>
 
           <!-- Governance Fee -->
@@ -510,12 +518,16 @@ const getNextRoundSince = (data: any) => {
             </td>
           </tr>
 
-          <!-- Interest Rate -->
           <tr>
             <td class="metric-name">Interest Rate</td>
             <td v-for="service in services" :key="service.id">
               {{ service.data.interestRate || '-' }}
             </td>
+          </tr>
+
+          <!-- ==================== LIQUIDITY METRICS ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">💎 Liquidity & Supply Metrics</td>
           </tr>
 
           <!-- TVL (Total Value Locked) -->
@@ -550,12 +562,16 @@ const getNextRoundSince = (data: any) => {
             </td>
           </tr>
 
-          <!-- Pool Utilization Rate -->
           <tr>
             <td class="metric-name">Pool Utilization Rate</td>
             <td v-for="service in services" :key="service.id">
               {{ calculateUtilizationRate(service.data) }}
             </td>
+          </tr>
+
+          <!-- ==================== VALIDATOR ECONOMICS ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">🏛️ Validator Economics</td>
           </tr>
 
           <!-- Active Borrowers -->
@@ -581,7 +597,6 @@ const getNextRoundSince = (data: any) => {
             </td>
           </tr>
 
-          <!-- Pending Deposits/Withdrawals -->
           <tr>
             <td class="metric-name">Pending Deposits (TON)</td>
             <td v-for="service in services" :key="service.id">
@@ -594,6 +609,11 @@ const getNextRoundSince = (data: any) => {
             <td v-for="service in services" :key="service.id">
               {{ getPendingWithdrawals(service.data) }}
             </td>
+          </tr>
+
+          <!-- ==================== PROTOCOL-SPECIFIC DATA ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">📊 Protocol-Specific Metrics</td>
           </tr>
 
           <!-- Hipo Staking/Unstaking Flow -->
@@ -633,7 +653,6 @@ const getNextRoundSince = (data: any) => {
             </td>
           </tr>
 
-          <!-- Risk Indicators -->
           <tr>
             <td class="metric-name">Disbalance Tolerance</td>
             <td v-for="service in services" :key="service.id">
@@ -646,6 +665,11 @@ const getNextRoundSince = (data: any) => {
             <td v-for="service in services" :key="service.id">
               {{ getSurplus(service.data) }}
             </td>
+          </tr>
+
+          <!-- ==================== TIMING INFORMATION ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">⏰ Timing Information (Hipo)</td>
           </tr>
 
           <!-- Hipo Timing Information -->
@@ -668,6 +692,11 @@ const getNextRoundSince = (data: any) => {
             <td v-for="service in services" :key="service.id">
               {{ getNextRoundSince(service.data) }}
             </td>
+          </tr>
+
+          <!-- ==================== ROUND PERFORMANCE DATA ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">📈 Round Performance Data</td>
           </tr>
 
           <!-- Previous Round Borrowed -->
@@ -731,6 +760,11 @@ const getNextRoundSince = (data: any) => {
             <td v-for="service in services" :key="service.id" class="profit-cell">
               {{ getActualProfit(service.data, 'current') }}
             </td>
+          </tr>
+
+          <!-- ==================== YIELD CALCULATIONS ==================== -->
+          <tr class="section-header">
+            <td colspan="5" class="section-title">🎯 Yield Calculations</td>
           </tr>
 
           <tr>
@@ -840,6 +874,27 @@ h2 {
 .status-warning {
   background-color: #fff3cd;
   color: #856404;
+}
+
+.section-header {
+  background-color: #f8f9fa !important;
+  border-top: 2px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #495057;
+  padding: 0.85rem 0.75rem !important;
+  text-align: left !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+}
+
+.section-header:hover {
+  background-color: #f8f9fa !important;
 }
 
 @media (max-width: 768px) {
