@@ -62,7 +62,7 @@ onMounted(async () => {
 
 <template>
   <div class="container">
-    <h1>round ROI & APY Calculator</h1>
+    <h1>Round ROI & APY Calculator</h1>
 
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>

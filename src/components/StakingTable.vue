@@ -10,12 +10,12 @@ const props = defineProps<{
   rounds?: number;
 }>();
 
-// 使用適配器轉換資料
+// Use adapter to transform data
 const standardizedData = computed(() => {
   return adaptData(props.data, props.config || {});
 });
 
-// 計算前一輪利息
+// Calculate previous round interest
 const prevRoundInterest = computed(() => {
   if (!standardizedData.value.previousRound?.expected || !standardizedData.value.previousRound?.borrowed) {
     return '-';
@@ -25,7 +25,7 @@ const prevRoundInterest = computed(() => {
   return formatTON(interest);
 });
 
-// 計算當前輪利息
+// Calculate current round interest
 const currentRoundInterest = computed(() => {
   if (!standardizedData.value.currentRound?.expected || !standardizedData.value.currentRound?.borrowed) {
     return '-';
@@ -42,39 +42,39 @@ const currentRoundInterest = computed(() => {
     <table class="data-table">
       <tbody>
         <tr>
-          <td class="label">手續費</td>
+          <td class="label">Governance Fee</td>
           <td class="value">{{ standardizedData.governanceFee || '-' }}</td>
         </tr>
         <tr>
-          <td class="label">利率</td>
+          <td class="label">Interest Rate</td>
           <td class="value">{{ standardizedData.interestRate || '-' }}</td>
         </tr>
         <tr>
-          <td class="label">前一輪借出(TON)</td>
+          <td class="label">Previous Round Borrowed (TON)</td>
           <td class="value">{{ standardizedData.previousRound?.borrowed ?
             formatTON(standardizedData.previousRound.borrowed) : '-' }}</td>
         </tr>
         <tr>
-          <td class="label">前一輪返還(TON)</td>
+          <td class="label">Previous Round Expected (TON)</td>
           <td class="value">{{ standardizedData.previousRound?.expected ?
             formatTON(standardizedData.previousRound.expected) : '-' }}</td>
         </tr>
         <tr>
-          <td class="label">前一輪利息(TON)</td>
+          <td class="label">Previous Round Interest (TON)</td>
           <td class="value">{{ prevRoundInterest }}</td>
         </tr>
         <tr>
-          <td class="label">本輪借出(TON)</td>
+          <td class="label">Current Round Borrowed (TON)</td>
           <td class="value">{{ standardizedData.currentRound?.borrowed ?
             formatTON(standardizedData.currentRound.borrowed) : '-' }}</td>
         </tr>
         <tr>
-          <td class="label">本輪返還(TON)</td>
+          <td class="label">Current Round Expected (TON)</td>
           <td class="value">{{ standardizedData.currentRound?.expected ?
             formatTON(standardizedData.currentRound.expected) : '-' }}</td>
         </tr>
         <tr>
-          <td class="label">本輪利息(TON)</td>
+          <td class="label">Current Round Interest (TON)</td>
           <td class="value">{{ currentRoundInterest }}</td>
         </tr>
       </tbody>

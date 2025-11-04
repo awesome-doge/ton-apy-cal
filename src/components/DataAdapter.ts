@@ -14,14 +14,14 @@ export interface StandardizedData {
 }
 
 export interface PoolConfig {
-    // 資料適配的映射配置
+    // Data mapping configuration
     governanceFeeField?: string;
     interestRateField?: string;
     currentRoundBorrowedField?: string;
     currentRoundExpectedField?: string;
     previousRoundBorrowedField?: string;
     previousRoundExpectedField?: string;
-    // 轉換函數
+    // Transform functions
     governanceFeeTransform?: (value: any) => any;
     interestRateTransform?: (value: any) => any;
     currentRoundBorrowedTransform?: (value: any) => any;
@@ -31,17 +31,17 @@ export interface PoolConfig {
 }
 
 /**
- * 將任意結構的資料轉換成標準格式
- * @param data 原始資料
- * @param config 配置選項
- * @returns 標準化後的資料
+ * Convert arbitrary data structure to standard format
+ * @param data Raw data
+ * @param config Configuration options
+ * @returns Standardized data
  */
 export function adaptData(data: any, config: PoolConfig = {}): StandardizedData {
     const defaultValue = (value: any, defaultVal: any = 0) => {
         return value !== undefined && value !== null ? value : defaultVal;
     };
 
-    // 透過配置提取資料或使用預設路徑
+    // Extract data via configuration or use default path
     const getValue = (obj: any, path: string | undefined, defaultPath: string, transform?: (v: any) => any) => {
         const actualPath = path || defaultPath;
         const parts = actualPath.split('.');
@@ -55,7 +55,7 @@ export function adaptData(data: any, config: PoolConfig = {}): StandardizedData 
         return transform ? transform(current) : defaultValue(current);
     };
 
-    // 建立標準化資料結構
+    // Build standardized data structure
     return {
         governanceFee: getValue(
             data,
@@ -101,14 +101,14 @@ export function adaptData(data: any, config: PoolConfig = {}): StandardizedData 
 }
 
 /**
- * 計算單輪收益率
+ * Calculate single round ROI
  */
 export function calculateROI(data: StandardizedData): BigNumber | string {
     try {
         const totalExpected = BigNumber(data?.currentRound?.expected || 0).plus(data?.previousRound?.expected || 0);
         const totalBorrowed = BigNumber(data?.currentRound?.borrowed || 0).plus(data?.previousRound?.borrowed || 0);
 
-        // 避免除以零的錯誤
+        // Avoid division by zero
         if (totalBorrowed.isZero()) {
             return '-';
         }
@@ -118,7 +118,7 @@ export function calculateROI(data: StandardizedData): BigNumber | string {
 
         const roi = totalProfit.times(govFeeFactor).div(totalBorrowed);
 
-        // 檢查計算結果是否有效
+        // Check if calculation result is valid
         if (roi.isNaN() || !roi.isFinite()) {
             return '-';
         }
@@ -131,13 +131,13 @@ export function calculateROI(data: StandardizedData): BigNumber | string {
 }
 
 /**
- * 計算年化收益率
+ * Calculate annualized APY
  */
 export function calculateAPY(data: StandardizedData, rounds: number = 240): string {
     try {
         const roi = calculateROI(data);
 
-        // 如果ROI不是有效數值，返回'-'
+        // If ROI is not a valid number, return '-'
         if (roi === '-' || !roi) {
             return '-';
         }
@@ -145,7 +145,7 @@ export function calculateAPY(data: StandardizedData, rounds: number = 240): stri
         // APY = (1 + ROI)^rounds - 1
         const result = BigNumber(1).plus(roi).pow(BigNumber(rounds)).minus(1).times(100);
 
-        // 檢查結果是否有效
+        // Check if result is valid
         if (result.isNaN() || !result.isFinite()) {
             return '-';
         }
@@ -158,7 +158,7 @@ export function calculateAPY(data: StandardizedData, rounds: number = 240): stri
 }
 
 /**
- * 格式化TON數值
+ * Format TON value
  */
 export function formatTON(value: any): string {
     if (!value) return '-';
@@ -166,18 +166,18 @@ export function formatTON(value: any): string {
 }
 
 /**
- * 創建一個特定數據源的適配器工廠
+ * Create an adapter factory for specific data source
  */
 export function createAdapter(config: PoolConfig) {
     return (data: any) => adaptData(data, config);
 }
 
-// 預設適配器配置範例
+// Default adapter configuration examples
 export const adapterConfigs = {
-    // KTON適配器配置
+    // KTON adapter configuration
     kton: {},
 
-    // 例子: Hipo適配器配置
+    // Example: Hipo adapter configuration
     hipo: {
         governanceFeeField: 'governanceFee',
         previousRoundBorrowedField: 'lastStaked',
@@ -187,7 +187,7 @@ export const adapterConfigs = {
         interestRateField: 'interestRate'
     },
 
-    // 自定義適配器配置的例子
+    // Example: Custom adapter configuration
     custom: {
         governanceFeeField: 'fees.governance',
         interestRateField: 'rates.interest',
@@ -195,7 +195,7 @@ export const adapterConfigs = {
         currentRoundExpectedField: 'rounds.current.recovered',
         previousRoundBorrowedField: 'rounds.previous.staked',
         previousRoundExpectedField: 'rounds.previous.recovered',
-        // 自定義轉換函數例子
+        // Example: Custom transform function
         governanceFeeTransform: (value: any) => value ? value / 100 : 0
     }
 }; 
